@@ -47,12 +47,16 @@ Node* deleteNode(Node *root, int value) {
 
                     replacementNode = replacementNode->left; 
 
-                } else if (replacementNode->left == NULL) {
+                } else if (replacementNode->left == NULL && replacementNode->right == NULL) {
 
                     temp = replacementNode;
                     temp->left = root->left;
                     free(root);
                     root = temp;
+
+                } else if (replacementNode->left == NULL && replacementNode->right != NULL) {
+
+                    replacementNode = replacementNode->right;
 
                 }
 

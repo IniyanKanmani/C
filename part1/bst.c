@@ -4,7 +4,8 @@
 #include<unistd.h>
 #include "bst.h"
 
-int sum, count = 0;
+int sum = 0;
+int count = 0;
 // Your source code
 Node* insertNode(Node *root, int value) {
 
@@ -33,7 +34,6 @@ Node* insertNode(Node *root, int value) {
 Node* deleteNode(Node *root, int value) {
 
     struct Node *replacementNode = NULL;
-    struct Node *temp = NULL;
 
     if (root->data == value) {
 
@@ -41,22 +41,21 @@ Node* deleteNode(Node *root, int value) {
 
             replacementNode = root->right;
 
-            while(temp == NULL) {
+            while(root->data != replacementNode->data) {
 
                 if (replacementNode->left != NULL) {
 
-                    replacementNode = replacementNode->left; 
+                    replacementNode = replacementNode->left;
 
-                } else if (replacementNode->left == NULL) {
+                } else if (replacementNode->left == NULL && replacementNode->right == NULL) {
 
-                    temp = replacementNode;
-                    temp->left = root->left;
-                    free(root);
-                    root = temp;
+                    root->data = replacementNode->data;
 
                 }
 
             }
+
+            root->right = deleteNode(root->right, root->data);
 
         } else if (root->left == NULL && root->right != NULL) {
 
