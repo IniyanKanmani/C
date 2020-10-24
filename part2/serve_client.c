@@ -1,4 +1,4 @@
-pthread_rwlock_t lock = PTHREAD_RWLOCK_INITIALIZER;
+pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 
 
 void* ServeClient(char *client){
@@ -24,17 +24,13 @@ void* ServeClient(char *client){
 	// print: "[ClientName]sumSubtree = <SomeNumber>\n"
 	// e.g. "[client1_commands]sumSubtree 1\n"
     
+	pthread_mutex_lock(&lock);
+	
 	FILE *fp = fopen(client, "r");
 	char ch = ' ';
 
-	//if (fp == NULL) {
-	//	printf("The File is Empty");
-	//	exit(-1);
-	//}
-
-	pthread_rwlock_rdlock(&lock);
-
 	ch = getc(fp);
+
 	while (ch != EOF) {
 
 		char stringChar[11] = {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '\0'};
@@ -45,7 +41,7 @@ void* ServeClient(char *client){
 		while (ch != '\n')
 		{
 			
-			while (ch != ' ') {
+			while (ch != ' ' && ch != '\n') {
 
 				stringChar[i] = ch;
 				ch = getc(fp);
@@ -74,22 +70,23 @@ void* ServeClient(char *client){
 			int num = 0;
 			sscanf(stringNum, "%d", &num);
 			root = insertNode(root, num);
-			printf("[%s]insertNode %s\n", client, stringNum);
+			printf("[%s]insertNode %d\n", client, num);
 
 		} else if (strcmp(stringChar, "deleteNode") == 0) {
 
 			int num = 0;
 			sscanf(stringNum, "%d", &num);
+			printf("[%s]DeleteNode stringNum is converted to int and is %d\n", client, num);
 			root = deleteNode(root, num);
-			printf("[%s]deleteNode %s\n", client, stringNum);
+			printf("[%s]deleteNode %d\n", client, num);
 
 		} else if (strcmp(stringChar, "countNodes") == 0) {
 
-			printf("[%s]countNodes = 0\n", client);
+			printf("[%s]countNodes = %d\n", client, countNodes(root));
 
 		} else if (strcmp(stringChar, "sumSubtree") == 0) {
 
-			printf("[%s]sumSubtree = 0\n", client);
+			printf("[%s]sumSubtree = %d\n", client, sumSubtree(root));
 
 		}
 
@@ -97,9 +94,9 @@ void* ServeClient(char *client){
 		
 	}
 
-	pthread_rwlock_unlock(&lock);
-
 	fclose(fp);
+	
+	pthread_mutex_unlock(&lock);
 
 	return NULL;
 
