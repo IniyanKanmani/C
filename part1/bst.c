@@ -4,13 +4,19 @@
 #include<unistd.h>
 #include "bst.h"
 
-// Your source code
 Node* insertNode(Node *root, int value) {
-
 
     if (root == NULL) {
 
         root = (Node*)malloc(sizeof(struct Node));
+
+        if (root == NULL) {
+
+            printf("ALLOCATION FAILED");
+            exit(-1);
+
+        }
+
         root->data = value;
         root->left = NULL;
         root->right = NULL;
@@ -36,9 +42,9 @@ Node* deleteNode(Node *root, int value) {
         if (root->left != NULL && root->right != NULL) {
 
             struct Node *replacementNode = root->right;
-            int i = 0;
+            int flag = 0;
 
-            while (i != 1) {
+            while (flag != 1) {
 
                 if (replacementNode->left != NULL) {
 
@@ -46,7 +52,8 @@ Node* deleteNode(Node *root, int value) {
 
                         root->data = (replacementNode->left)->data;
                         root->right = deleteNode(root->right, root->data);
-                        i = 1;
+
+                        flag = 1;
 
                     } else {
 
@@ -58,7 +65,8 @@ Node* deleteNode(Node *root, int value) {
 
                     root->data = replacementNode->data;
                     root->right = deleteNode(root->right, root->data);
-                    i = 1;
+
+                    flag = 1;
 
                 }
 
@@ -68,17 +76,20 @@ Node* deleteNode(Node *root, int value) {
 
             struct Node *replacementNode = root->right;
             free(root);
+
             return replacementNode;
 
         } else if (root->left != NULL && root->right == NULL) {
 
             struct Node *replacementNode = root->left;
             free(root);
+
             return replacementNode;
 
         } else if (root->left == NULL && root->right == NULL) {
 
             free(root);
+
             return NULL;
 
         }
@@ -130,6 +141,7 @@ Node* freeSubtree(Node *N) {
         N->left = freeSubtree(N->left);
         N->right = freeSubtree(N->right);
         free(N);
+
     }
 
     return NULL;

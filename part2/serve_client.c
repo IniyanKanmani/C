@@ -1,33 +1,18 @@
 pthread_rwlock_t lock = PTHREAD_RWLOCK_INITIALIZER;
 
-
-void* ServeClient(char *client){
-
-	// TODO: Open the client command file and read commands line by line
-
-	// TODO: match and execute commands
-
-	// TODO: Handle command: "insertNode <some unsigned int value>"
-	// print: "[ClientName]insertNode <SomeNumber>\n"
-	// e.g. "[client1_commands]insertNode 1\n"
-
-	// TODO: Handle command: "deleteNode <some unsigned int value>"
-	// print: "[ClientName]deleteNode <SomeNumber>\n"
-	// e.g. "[client1_commands]deleteNode 1\n"
-
-	// TODO: Handle command: "countNodes"
-	// print: "[ClientName]countNodes = <SomeNumber>\n"
-	// e.g. "[client1_commands]countNodes 1\n"
-
-
-	// TODO: Handle command: "sumSubtree"
-	// print: "[ClientName]sumSubtree = <SomeNumber>\n"
-	// e.g. "[client1_commands]sumSubtree 1\n"
+void* ServeClient(char *client) {
     
 	pthread_rwlock_wrlock(&lock);
 	
 	FILE *fp = fopen(client, "r");
 	char ch = ' ';
+
+	if (fp == NULL) {
+
+		printf("CANNOT OPEN FILE: %s\n", client);
+		exit(-1);
+
+	}
 
 	ch = getc(fp);
 
@@ -39,8 +24,7 @@ void* ServeClient(char *client){
 		int j = 0;
 		int num = 0;
 
-		while (ch != '\n')
-		{
+		while (ch != '\n') {
 			
 			while (ch != ' ' && ch != '\n') {
 
