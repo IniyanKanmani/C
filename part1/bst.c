@@ -4,8 +4,6 @@
 #include<unistd.h>
 #include "bst.h"
 
-int sum = 0;
-int count = 0;
 // Your source code
 Node* insertNode(Node *root, int value) {
 
@@ -33,39 +31,48 @@ Node* insertNode(Node *root, int value) {
 
 Node* deleteNode(Node *root, int value) {
 
-    struct Node *replacementNode = NULL;
-
     if (root->data == value) {
 
         if (root->left != NULL && root->right != NULL) {
 
-            replacementNode = root->right;
+            struct Node *replacementNode = root->right;
+            int i = 0;
 
-            while(root->data != replacementNode->data) {
+            while (i != 1) {
 
                 if (replacementNode->left != NULL) {
 
-                    replacementNode = replacementNode->left;
+                    if ((replacementNode->left)->left == NULL && (replacementNode->left)->right != NULL) {
 
-                } else if (replacementNode->left == NULL && replacementNode->right == NULL) {
+                        root->data = (replacementNode->left)->data;
+                        root->right = deleteNode(root->right, root->data);
+                        i = 1;
+
+                    } else {
+
+                        replacementNode = replacementNode->left;
+
+                    }
+
+                } else if (replacementNode->left == NULL) {
 
                     root->data = replacementNode->data;
+                    root->right = deleteNode(root->right, root->data);
+                    i = 1;
 
                 }
 
             }
 
-            root->right = deleteNode(root->right, root->data);
-
         } else if (root->left == NULL && root->right != NULL) {
 
-            replacementNode = root->right;
+            struct Node *replacementNode = root->right;
             free(root);
             return replacementNode;
 
         } else if (root->left != NULL && root->right == NULL) {
 
-            replacementNode = root->left;
+            struct Node *replacementNode = root->left;
             free(root);
             return replacementNode;
 
@@ -106,13 +113,13 @@ int countNodes(Node *N) {
 
     if (N != NULL) {
 
-        countNodes(N->left);
-        count = count + 1;
-        countNodes(N->right);
+        return (countNodes(N->left) + countNodes(N->right) + 1);
+
+    } else if (N == NULL) {
+
+        return 0;
 
     }
-
-    return count;
 
 }
 
@@ -133,12 +140,12 @@ int sumSubtree(Node *N) {
 
     if (N != NULL) {
 
-        sumSubtree(N->left);
-        sum = sum + N->data;;
-        sumSubtree(N->right);
+        return (sumSubtree(N->left) + sumSubtree(N->right) + N->data);
+
+    } else if (N == NULL) {
+
+        return 0;
 
     }
-
-    return sum;
 
 }
