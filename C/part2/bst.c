@@ -41,29 +41,29 @@ Node* deleteNode(Node *root, int value) {
 
         if (root->left != NULL && root->right != NULL) {
 
-            struct Node *replacementNode = root->right;
+            struct Node *temp = root->right;
             int flag = 0;
 
             while (flag != 1) {
 
-                if (replacementNode->left != NULL) {
+                if (temp->left != NULL) {
 
-                    if ((replacementNode->left)->left == NULL && (replacementNode->left)->right != NULL) {
+                    if ((temp->left)->left == NULL && (temp->left)->right != NULL) {
 
-                        root->data = (replacementNode->left)->data;
+                        root->data = (temp->left)->data;
                         root->right = deleteNode(root->right, root->data);
 
                         flag = 1;
 
                     } else {
 
-                        replacementNode = replacementNode->left;
+                        temp = temp->left;
 
                     }
 
-                } else if (replacementNode->left == NULL) {
+                } else if (temp->left == NULL) {
 
-                    root->data = replacementNode->data;
+                    root->data = temp->data;
                     root->right = deleteNode(root->right, root->data);
 
                     flag = 1;
@@ -74,17 +74,17 @@ Node* deleteNode(Node *root, int value) {
 
         } else if (root->left == NULL && root->right != NULL) {
 
-            struct Node *replacementNode = root->right;
+            struct Node *temp = root->right;
             free(root);
 
-            return replacementNode;
+            return temp;
 
         } else if (root->left != NULL && root->right == NULL) {
 
-            struct Node *replacementNode = root->left;
+            struct Node *temp = root->left;
             free(root);
 
-            return replacementNode;
+            return temp;
 
         } else if (root->left == NULL && root->right == NULL) {
 
